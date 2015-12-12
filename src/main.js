@@ -2,9 +2,9 @@
 const width = 400;
 const height = 600;
 
-var gButton, nButton;
+var gButton, nButton, emitter;
 var gButtonSprite, nButtonSprite, mainTitle, textGrown, textNext, textCreated, textLudum;
-var scoring, score;
+var scoreText, score;
 var lifeText, life1, life2, life3;
 var timerText, timer, seed, seedParam, phase;
 var itTimeToBegin = true;
@@ -70,11 +70,19 @@ function create() {
     game.soundG = game.add.audio('soundG');
     game.soundN = game.add.audio('soundN');
 
+    emitter = game.add.emitter(width / 2, height - 150, 10);
+    emitter.makeParticles('seed1');
+    emitter.minParticleSpeed.set(-50, -30);
+    emitter.maxParticleSpeed.set(50, 30);
+    emitter.setAlpha(1, 0.1, 1000, Phaser.Easing.Linear.None);
+    emitter.setScale(0.7, 0.1, 0.7, 0.1, 3000, Phaser.Easing.Quintic.Out);
+    emitter.gravity = 200;
+
 }
 
 function update() {
 
-    if (gButton.isDown && gButton.downDuration(50)) {
+    if (gButton.isDown && gButton.downDuration(1)) {
         game.soundG.play();
 
         if (itTimeToBegin) {
@@ -85,7 +93,7 @@ function update() {
         }
     }
 
-    if (nButton.isDown && nButton.downDuration(50)) {
+    if (nButton.isDown && nButton.downDuration(1)) {
         game.soundN.play();
 
         if (itTimeToBegin) {
@@ -95,7 +103,6 @@ function update() {
             next();
         }
     }
-
 }
 
 function beginGame() {
@@ -114,6 +121,7 @@ function beginGame() {
     textNext.destroy();
 
     // Affichage des params du jeu
+    if (lifeText) lifeText.destroy();
     lifeText = game.add.text(145, 130, "Life :", {
         font: "28px Arial",
         fill: "#ffffff"
@@ -125,6 +133,7 @@ function beginGame() {
     life2.scale.setTo(3, 3);
     life3.scale.setTo(3, 3);
 
+    if (timerText) timerText.destroy();
     timerText = game.add.text(180, 200, "Timer : 5.0", {
         font: "28px Arial",
         fill: "#ffffff"
@@ -132,7 +141,8 @@ function beginGame() {
 
     //game.time.events.loop(Phaser.Timer, updateTimer, this);
 
-    scoring = game.add.text(180, 250, "Score : 0", {
+    if (scoreText) scoreText.destroy();
+    scoreText = game.add.text(180, 250, "Score : 0", {
         font: "28px Arial",
         fill: "#ffffff"
     });
@@ -144,21 +154,91 @@ function beginGame() {
 function addNewSeed() {
 
     //On récupère aléatoirement une graine selon la phase
-    seed = game.add.sprite(width / 2 - 10, height - 150, 'seed1');
+    var seedToFind = Math.random();
+
+    // Calcul de probabilité selon la phase
+    var probabilities;
+
+    if (phase < 5) {
+        probabilities = [1, 0, 0, 0, 0, 0];
+    }
+    else if (phase < 10) {
+        probabilities = [0.75, 0.25, 0, 0, 0, 0];
+    }
+    else if (phase < 20) {
+        probabilities = [0.6, 0.3, 0.1, 0, 0, 0];
+    }
+    else if (phase < 30) {
+        probabilities = [0.4, 0.3, 0.2, 0, 0, 0.1];
+    }
+    else if (phase < 40) {
+        probabilities = [0.3, 0.2, 0.2, 0.2, 0, 0.1];
+    }
+    else {
+        probabilities = [0.18, 0.18, 0.18, 0.18, 0.18, 0.1];
+    }
+
+    var finded = false;
+    var i = 0;
+    while (!finded) {
+        if (seedToFind < probabilities[i]) {
+            finded = true;
+        }
+        else {
+            seedToFind = seedToFind - probabilities[i];
+            i++;
+        }
+    }
+
     seedParam = {
         life: 1,
         grown: 0,
         bomb: false
     };
+
+    var seedToAdd;
+    switch (i) {
+        case 0:
+            seedParam.life = 1;
+            seedToAdd = 'seed1';
+            break;
+        case 1:
+            seedParam.life = 2;
+            seedToAdd = 'seed2';
+            break;
+        case 2:
+            seedParam.life = 3;
+            seedToAdd = 'seed3';
+            break;
+        case 3:
+            seedParam.life = 4;
+            seedToAdd = 'seed4';
+            break;
+        case 4:
+            seedParam.life = 5;
+            seedToAdd = 'seed5';
+            break;
+        case 5:
+            seedParam.life = 0;
+            bomb: true;
+            seedToAdd = 'howitzer';
+            break;
+    }
+
+    seed = game.add.sprite(width / 2 - 10, height - 150, seedToAdd);
+    emitter.makeParticles(seedToAdd);
     seed.scale.setTo(2, 2);
 };
 
 function grown() {
 
-    seedParam.grown++;
+
     if (seedParam.bomb) losingLife(3);
-    if (seedParam.grown > seedParam.life) {
+    if (seedParam.grown >= seedParam.life) {
         losingLife(1);
+    }
+    else {
+        seedParam.grown++;
     }
 };
 
@@ -167,6 +247,9 @@ function next() {
     if (seedParam.grown === seedParam.life) {
         scoring();
         phase++;
+
+        emitter.start(true, 1000, null, 50);
+        seed.destroy();
         addNewSeed();
     }
     else {
@@ -195,7 +278,7 @@ function losingLife(lose) {
 };
 
 function scoring() {
-    switch (seed.life) {
+    switch (seedParam.life) {
         case 1:
             score += 100;
             break;
@@ -212,14 +295,16 @@ function scoring() {
             score += 2000;
             break;
     }
-    scoring.setText('Score : ' + score);
+    scoreText.setText('Score : ' + score);
 };
 
 function gameOver() {
 
     lifeText.setText('GAME OVER');
     life1.destroy();
-    timerText.destroy();
+    seed.destroy();
+    timerText.setText('Press G or N to restart');
+    itTimeToBegin = true;
 
 };
 
