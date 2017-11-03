@@ -25,8 +25,8 @@ export default class extends Phaser.State {
     this.load.image('background', './assets/images/background/background.png')
     this.load.image('howitzer', './assets/images/tiles/howitzer.png')
 
-    this.load.audio('soundG', ['sounds/gButton.MP3'])
-    this.load.audio('soundN', ['sounds/nButton.MP3'])
+    this.load.audio('soundG', ['./assets/sound/gButton.MP3'])
+    this.load.audio('soundN', ['./assets/sound/nButton.MP3'])
   }
 
   create () {
