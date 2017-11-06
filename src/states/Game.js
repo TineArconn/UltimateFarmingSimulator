@@ -1,5 +1,6 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
+import styles from '../interfaces/styles.js'
 // import Tile from '../sprites/Tile'
 // import Farmer from '../sprites/Farmer'
 // import Background from '../sprites/Background'
@@ -55,14 +56,9 @@ export default class extends Phaser.State {
     this.life2.scale.setTo(3, 3)
     this.life3.scale.setTo(3, 3)
 
-    let interfaceStyle = {
-      font: '28px Arial',
-      fill: '#ffffff'
-    }
-
-    this.lifeText = this.add.text(145, 130, 'Life :', interfaceStyle)
-    this.timerText = this.add.text(180, 200, 'Timer : 5.0', interfaceStyle)
-    this.scoreText = this.add.text(180, 250, 'Score : 0', interfaceStyle)
+    this.lifeText = this.add.text(145, 130, 'Life :', styles.interface)
+    this.timerText = this.add.text(180, 200, 'Timer : 5.0', styles.interface)
+    this.scoreText = this.add.text(180, 250, 'Score : 0', styles.interface)
 
     // this.mushroom = new Mushroom({
     //   game: this,
@@ -76,10 +72,7 @@ export default class extends Phaser.State {
     this.addNewSeed()
   }
   gameOver () {
-    this.lifeText.setText('GAME OVER')
-    this.life1.destroy()
-    this.seed.destroy()
-    this.timerText.setText('Press G or N to restart')
+    this.state.start('GameOver')
   }
   losingLife (lose) {
     if (lose === 3) {

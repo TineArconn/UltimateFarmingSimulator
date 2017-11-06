@@ -1,6 +1,7 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import styles from '../interfaces/styles.js'
+
 export default class extends Phaser.State {
   init () {}
   preload () {}
@@ -30,11 +31,16 @@ export default class extends Phaser.State {
     // Sound
     this.soundG = this.add.audio('soundG')
     this.soundN = this.add.audio('soundN')
-    nButton.onDown.addOnce(this.start, this)
-    gButton.onDown.addOnce(this.start, this)
+    nButton.onDown.addOnce(this.restart, this)
+    gButton.onDown.addOnce(this.restart, this)
   }
 
-  start () {
-    this.state.start('Game')
+    // this.lifeText.setText('GAME OVER')
+    // this.life1.destroy()
+    // this.seed.destroy()
+    // this.timerText.setText('Press G or N to restart')
+
+  restart () {
+    this.state.start('Title')
   }
 }
