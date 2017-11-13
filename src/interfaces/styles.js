@@ -4,8 +4,8 @@ export default {
     fontSize: 40,
     fill: '#43d637',
     stroke: '#000000',
-    strokeThickness: 6,
-    wordWrap: true
+    strokeThickness: 6
+    // wordWrap: true
   },
   button: {
     font: '30px Arial',

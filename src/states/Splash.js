@@ -32,10 +32,11 @@ export default class extends Phaser.State {
     this.load.image('howitzer', './assets/images/tiles/howitzer.png')
 
     // Background
+    this.load.image('grass', './assets/images/background/iso-grass.png')
     this.load.image('stables', './assets/images/background/stables.svg')
     this.load.image('warehouse', './assets/images/background/warehouse.svg')
     this.load.image('windmill', './assets/images/background/windmill.svg')
-    this.load.image('well', './assets/images/background/well.svg')
+    this.load.image('well', './assets/images/background/wishing_well.svg')
 
 
     // Sound

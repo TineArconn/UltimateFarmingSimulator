@@ -14,12 +14,33 @@ export default class extends Phaser.State {
 
     // Background
     this.stage.backgroundColor = '#03a9f4'
-    //this.stage.background = this.add.sprite(0, 0, 'background')
-    //this.stage.background.scale.setTo(4, 4)
+    this.stage.background = this.add.sprite(0, 0, 'grass')
+    this.stage.background.scale.setTo(4, 4)
+    // -- Sky Part
+    let graphics = this.add.graphics(0, 0)
+    graphics.beginFill(0x10fe00)
+    graphics.drawRect(0, 150, width, height * 0.70)
+    graphics.endFill()
+    // -- Game Part
+    graphics = this.add.graphics(0, 0)
+    graphics.beginFill(0x04a9f4)
+    graphics.drawRect(0, 0, width, 150)
+    graphics.endFill()
+    // -- Interface Part
+    graphics = this.add.graphics(0, 0)
+    graphics.beginFill(0x9e9e9e)
+    graphics.drawRect(0, height * 0.70, width, height)
+    graphics.endFill()
+    // -- Credits Part
+    graphics = this.add.graphics(0, 0)
+    graphics.beginFill()
+    graphics.drawRect(0, 550, width, height)
+    graphics.endFill()
     this.transparent = true
 
     // Title text
-    this.add.text(width - 220, 100, 'Ultimate Farming Simulator', styles.title)
+    this.add.text(width / 5, 20, 'Ultimate Farming', styles.title)
+    this.add.text(width / 3, 60, 'Simulator', styles.title)
     this.add.text(120, height - 40, 'Created by Tine Arconn', styles.big)
     this.add.text(60, height - 20, 'Ludum Dare 34 - Growing & Two Buttons Controls', styles.small)
 
@@ -38,9 +59,8 @@ export default class extends Phaser.State {
     gButton.onDown.addOnce(this.start, this)
 
     // Tiles
-    this.isoGroup = this.game.add.group()
+    this.gameGroup = this.game.add.group()
     this.spawnTiles()
-
   }
 
   start () {
@@ -53,8 +73,9 @@ export default class extends Phaser.State {
       for (let yy = 0; yy < 180; yy += 38) {
       // Create a tile using the new game.add.isoSprite factory method at the specified position.
       // The last parameter is the group you want to add it to (just like game.add.sprite)
-        tile = this.isoPlugin.addIsoSprite(xx, yy, 0, 'tile3', 0, this.isoGroup)
+        tile = this.isoPlugin.addIsoSprite(xx, yy, 0, 'tile3', 0, this.gameGroup)
         tile.anchor.set(0.5, 0)
+        tile.scale.setTo(1.8, 1.8)
       }
     }
   }
