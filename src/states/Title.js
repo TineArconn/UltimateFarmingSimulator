@@ -1,6 +1,8 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import styles from '../interfaces/styles.js'
+import { createBackground, spawnTiles } from '../interfaces/background.js'
+
 export default class extends Phaser.State {
   init () {}
   preload () {
@@ -12,37 +14,7 @@ export default class extends Phaser.State {
     let width = this.game.width
     let height = this.game.height
 
-    // Background
-    // -- Sky Part
-    let graphics = this.add.graphics(0, 0)
-    graphics.beginFill(0x04a9f4)
-    graphics.drawRect(0, 0, width, height / 2)
-    graphics.endFill()
-    // -- Interface Part
-    graphics = this.add.graphics(0, 0)
-    graphics.beginFill(0x9e9e9e)
-    graphics.drawRect(0, height / 2, width, height)
-    graphics.endFill()
-    // -- Game Part
-    graphics = this.add.graphics(0, 0)
-    let poly = new Phaser.Polygon()
-    poly.setTo([new Phaser.Point(0, height / 2 - 25),
-      new Phaser.Point(0, height / 2 + 60),
-      new Phaser.Point(width / 2, height / 2 + 170),
-      new Phaser.Point(width, height / 2 + 60),
-      new Phaser.Point(width, height / 2 - 25),
-      new Phaser.Point(width / 2, height / 2 - 135)
-    ])
-    graphics.beginFill(0x10fe00)
-    graphics.drawPolygon(poly.points)
-    graphics.endFill()
-    // -- Credits Part
-    graphics = this.add.graphics(0, 0)
-    graphics.beginFill()
-    graphics.drawRect(0, 550, width, height)
-    graphics.endFill()
-    this.transparent = true
-    this.setGroup = this.game.add.group()
+    createBackground(this)
 
     // Title text
     this.add.text(width / 5, 20, 'Ultimate Farming', styles.title)
@@ -66,43 +38,10 @@ export default class extends Phaser.State {
 
     // Tiles
     this.gameGroup = this.game.add.group()
-    this.spawnTiles()
+    spawnTiles(this)
   }
 
   start () {
     this.state.start('Game')
   }
-
-  spawnTiles () {
-    let tile
-    for (let xx = 0; xx < 332; xx += 38) {
-      for (let yy = 0; yy < 332; yy += 38) {
-      // Create a tile using the new game.add.isoSprite factory method at the specified position.
-      // The last parameter is the group you want to add it to (just like game.add.sprite)
-        console.log(xx, yy)
-        if (xx <= 38 || yy <= 38 || xx >= 266 || yy >= 266) {
-          tile = this.isoPlugin.addIsoSprite(xx, yy, 0, 'grass', 0, this.setGroup)
-          tile.anchor.set(0.5, 0.7)
-          tile.scale.setTo(1.8, 1.8)
-        } else {
-          tile = this.isoPlugin.addIsoSprite(xx, yy, 0, 'tile3', 0, this.gameGroup)
-          tile.anchor.set(0.5, 0.7)
-          tile.scale.setTo(1.8, 1.8)
-        }
-      }
-    }
-    tile = this.isoPlugin.addIsoSprite(76, 0, 0, 'stables', 0, this.setGroup)
-    tile.anchor.set(0.5, 0.7)
-    tile.scale.setTo(1, 1)
-    tile = this.isoPlugin.addIsoSprite(180, 0, 0, 'warehouse', 0, this.setGroup)
-    tile.anchor.set(0.5, 0.7)
-    tile.scale.setTo(1, 1)
-    tile = this.isoPlugin.addIsoSprite(0, 114, 0, 'windmill', 0, this.setGroup)
-    tile.anchor.set(0.5, 0.7)
-    tile.scale.setTo(1, 1)
-    tile = this.isoPlugin.addIsoSprite(0, 190, 0, 'well', 0, this.setGroup)
-    tile.anchor.set(0.5, 0.7)
-    tile.scale.setTo(0.3, 0.3)
-  }
-
 }

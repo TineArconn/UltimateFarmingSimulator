@@ -12,13 +12,6 @@ export default class extends Phaser.State {
     this.load.setPreloadSprite(this.loaderBar)
 
     // Tiles
-    this.load.image('seed1', './assets/images/tiles/seed1.png')
-    this.load.image('seed2', './assets/images/tiles/seed2.png')
-    this.load.image('seed3', './assets/images/tiles/seed3.png')
-    this.load.image('seed4', './assets/images/tiles/seed4.png')
-    this.load.image('seed5', './assets/images/tiles/seed5.png')
-    this.load.image('scythe', './assets/images/marker/scythe.png')
-
     this.load.image('tile1', './assets/images/tiles/grass3.png')
     this.load.image('tile2', './assets/images/tiles/iso-grass2.png')
     this.load.image('tile3', './assets/images/tiles/richsoil-farm.png')
@@ -29,7 +22,9 @@ export default class extends Phaser.State {
     this.load.image('buttonG', './assets/images/keyboard/buttonG.png')
     this.load.image('buttonN', './assets/images/keyboard/buttonN.png')
 
+    // Markers
     this.load.image('howitzer', './assets/images/tiles/howitzer.png')
+    this.load.image('life', './assets/images/marker/seed.png')
 
     // Background
     this.load.image('grass', './assets/images/background/iso-grass.png')

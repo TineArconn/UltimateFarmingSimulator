@@ -1,23 +1,20 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import styles from '../interfaces/styles.js'
-// import Tile from '../sprites/Tile'
-// import Farmer from '../sprites/Farmer'
-// import Background from '../sprites/Background'
-// import Life from '../sprites/Life'
+import { createBackground, spawnTiles } from '../interfaces/background.js'
 
 export default class extends Phaser.State {
   init () {}
-  preload () {}
+  preload () {
+    this.isoPlugin = this.game.plugins.add(Phaser.Plugin.Isometric)
+    this.game.iso.anchor.setTo(0.5, 0.3)
+  }
   create () {
     // Game variables
     this.phase = 1
     this.score = 0
 
-    // Background
-    this.stage.background = this.add.sprite(0, 0, 'background')
-    this.stage.background.scale.setTo(4, 4)
-    this.transparent = true
+    createBackground(this)
 
     // Particles effect
     this.emitter = this.add.emitter(this.width / 2, this.height - 150, 10)
@@ -29,14 +26,6 @@ export default class extends Phaser.State {
     this.emitter.gravity = 200
 
     // 2 Buttons
-    const buttonStyle = {
-      font: '30px Arial',
-      fill: '#ffffff'
-    }
-    this.add.sprite(50, this.height - 130, 'buttonG')
-    this.add.text(80, this.height - 130, 'Grown', buttonStyle)
-    this.add.sprite(230, this.height - 130, 'buttonN')
-    this.add.text(260, this.height - 130, 'Next', buttonStyle)
     this.nButton = this.input.keyboard.addKey(Phaser.Keyboard.N)
     this.gButton = this.input.keyboard.addKey(Phaser.Keyboard.G)
 
@@ -49,16 +38,15 @@ export default class extends Phaser.State {
     // Sprites
 
     // Interface
-    this.life1 = this.add.sprite(220, 110, 'scythe')
-    this.life2 = this.add.sprite(260, 110, 'scythe')
-    this.life3 = this.add.sprite(300, 110, 'scythe')
-    this.life1.scale.setTo(3, 3)
-    this.life2.scale.setTo(3, 3)
-    this.life3.scale.setTo(3, 3)
+    this.life1 = this.add.sprite(100, 30, 'life')
+    this.life2 = this.add.sprite(150, 30, 'life')
+    this.life3 = this.add.sprite(200, 30, 'life')
 
     this.lifeText = this.add.text(145, 130, 'Life :', styles.interface)
     this.timerText = this.add.text(180, 200, 'Timer : 5.0', styles.interface)
     this.scoreText = this.add.text(180, 250, 'Score : 0', styles.interface)
+
+    spawnTiles(this)
 
     // this.mushroom = new Mushroom({
     //   game: this,
