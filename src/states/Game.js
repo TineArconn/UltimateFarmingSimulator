@@ -10,15 +10,40 @@ export default class extends Phaser.State {
     this.game.iso.anchor.setTo(0.5, 0.3)
   }
   create () {
+    let width = this.game.width
+    let height = this.game.height
+
     // Game variables
     this.phase = 1
     this.score = 0
 
     createBackground(this)
+    spawnTiles(this)
+
+    // Farmer
+    this.farmer = this.add.sprite(width / 3, height / 4, 'idle')
+    this.farmer.animations.add('idle', [0, 1, 2, 3])
+    this.farmer.animations.play('idle', 10, true)
+    this.farmer.scale.set(0.5)
+
+    this.farmer = this.add.sprite(width / 3, height / 3, 'hoe')
+    this.farmer.animations.add('hoe', [0, 1, 2, 3, 4, 5, 6])
+    this.farmer.animations.play('hoe', 10, true)
+    this.farmer.scale.set(0.5)
+
+    this.farmer = this.add.sprite(width / 3, height / 2, 'plant')
+    this.farmer.animations.add('plant', [0, 1, 2, 3, 4, 5, 6])
+    this.farmer.animations.play('plant', 10, true)
+    this.farmer.scale.set(0.5)
+
+    this.farmer = this.add.sprite(width / 3, height - 200, 'can')
+    this.farmer.animations.add('can', [0, 1, 2, 3, 4, 5, 6])
+    this.farmer.animations.play('can', 10, true)
+    this.farmer.scale.set(0.5)
 
     // Particles effect
     this.emitter = this.add.emitter(this.width / 2, this.height - 150, 10)
-    this.emitter.makeParticles('seed1')
+    this.emitter.makeParticles('stone')
     this.emitter.minParticleSpeed.set(-50, -30)
     this.emitter.maxParticleSpeed.set(50, 30)
     this.emitter.setAlpha(1, 0.1, 1000, Phaser.Easing.Linear.None)
@@ -38,43 +63,26 @@ export default class extends Phaser.State {
     // Sprites
 
     // Interface
-    this.life1 = this.add.sprite(100, 30, 'life')
-    this.life2 = this.add.sprite(150, 30, 'life')
-    this.life3 = this.add.sprite(200, 30, 'life')
+    this.lifeText = this.add.text(50, 30, 'Life :', styles.interface)
+    this.life1 = this.lifeText.addChild(this.make.sprite(50, -15, 'life'))
+    this.life2 = this.life1.addChild(this.make.sprite(70, 0, 'life'))
+    this.life3 = this.life2.addChild(this.make.sprite(70, 0, 'life'))
 
-    this.lifeText = this.add.text(145, 130, 'Life :', styles.interface)
-    this.timerText = this.add.text(180, 200, 'Timer : 5.0', styles.interface)
-    this.scoreText = this.add.text(180, 250, 'Score : 0', styles.interface)
-
-    spawnTiles(this)
-
-    // this.mushroom = new Mushroom({
-    //   game: this,
-    //   x: this.world.centerX,
-    //   y: this.world.centerY,
-    //   asset: 'mushroom'
-    // })
-
-    // this.game.add.existing(this.mushroom)
+    this.timerText = this.add.text(20, height - 150, 'Timer : 5.0', styles.interface)
+    this.scoreText = this.add.text(width / 2 + 60, height - 150, 'Score : 0', styles.interface)
 
     this.addNewSeed()
   }
   gameOver () {
     this.state.start('GameOver')
   }
-  losingLife (lose) {
-    if (lose === 3) {
+  losingLife () {
+    if (this.life3.visible) {
       this.life3.destroy()
+    } else if (this.life2.visible) {
       this.life2.destroy()
-      this.gameOver()
     } else {
-      if (this.life3.visible) {
-        this.life3.destroy()
-      } else if (this.life2.visible) {
-        this.life2.destroy()
-      } else {
-        this.gameOver()
-      }
+      this.gameOver()
     }
   }
   scoring () {
@@ -131,36 +139,30 @@ export default class extends Phaser.State {
 
     this.seedParam = {
       life: 1,
-      grown: 0,
-      bomb: false
+      grown: 0
     }
 
     let seedToAdd
     switch (i) {
       case 0:
         this.seedParam.life = 1
-        seedToAdd = 'seed1'
+        seedToAdd = 'tile1'
         break
       case 1:
         this.seedParam.life = 2
-        seedToAdd = 'seed2'
+        seedToAdd = 'tile2'
         break
       case 2:
         this.seedParam.life = 3
-        seedToAdd = 'seed3'
+        seedToAdd = 'tile3'
         break
       case 3:
         this.seedParam.life = 4
-        seedToAdd = 'seed4'
+        seedToAdd = 'tile4'
         break
       case 4:
         this.seedParam.life = 5
-        seedToAdd = 'seed5'
-        break
-      case 5:
-        this.seedParam.life = 0
-        this.seedParam.bomb = true
-        seedToAdd = 'howitzer'
+        seedToAdd = 'tile5'
         break
     }
 
@@ -169,9 +171,8 @@ export default class extends Phaser.State {
     this.seed.scale.setTo(2, 2)
   }
   grown () {
-    if (this.seedParam.bomb) this.losingLife(3)
     if (this.seedParam.grown >= this.seedParam.life) {
-      this.losingLife(1)
+      this.losingLife()
     } else {
       this.seedParam.grown++
     }

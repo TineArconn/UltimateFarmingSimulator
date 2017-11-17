@@ -19,8 +19,6 @@ export default class extends Phaser.State {
     // Title text
     this.add.text(width / 5, 20, 'Ultimate Farming', styles.title)
     this.add.text(width / 3, 60, 'Simulator', styles.title)
-    this.add.text(120, height - 40, 'Created by Tine Arconn', styles.big)
-    this.add.text(60, height - 20, 'Ludum Dare 34 - Growing & Two Buttons Controls', styles.small)
 
     // 2 Buttons
     this.add.sprite(50, height - 130, 'buttonG')

@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import styles from '../interfaces/styles.js'
 
 export const createBackground = (state) => {
   let width = state.game.width
@@ -35,6 +36,8 @@ export const createBackground = (state) => {
   graphics.endFill()
   state.transparent = true
   state.setGroup = state.game.add.group()
+  state.add.text(120, height - 40, 'Created by Tine Arconn', styles.big)
+  state.add.text(60, height - 20, 'Ludum Dare 34 - Growing & Two Buttons Controls', styles.small)
 }
 
 export const spawnTiles = (state) => {

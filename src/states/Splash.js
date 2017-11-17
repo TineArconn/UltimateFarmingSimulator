@@ -25,6 +25,7 @@ export default class extends Phaser.State {
     // Markers
     this.load.image('howitzer', './assets/images/tiles/howitzer.png')
     this.load.image('life', './assets/images/marker/seed.png')
+    this.load.image('stone', './assets/images/marker/Stone3.png')
 
     // Background
     this.load.image('grass', './assets/images/background/iso-grass.png')
@@ -32,6 +33,12 @@ export default class extends Phaser.State {
     this.load.image('warehouse', './assets/images/background/warehouse.svg')
     this.load.image('windmill', './assets/images/background/windmill.svg')
     this.load.image('well', './assets/images/background/wishing_well.svg')
+
+    // Farmer
+    this.load.spritesheet('idle', './assets/images/animation/7_Farmer_Idle_strip4.png', 95, 128)
+    this.load.spritesheet('hoe', './assets/images/animation/7_Farmer_Hoe_strip13.png', 196, 187)
+    this.load.spritesheet('plant', './assets/images/animation/7_Farmer_Plant_strip11.png', 128, 146)
+    this.load.spritesheet('can', './assets/images/animation/7_Farmer_wCan_strip18.png', 141, 157)
 
 
     // Sound

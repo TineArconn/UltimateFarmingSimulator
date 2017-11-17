@@ -20,7 +20,7 @@ export default {
     fill: '#ffffff'
   },
   interface: {
-    font: '28px Arial',
+    font: '20px Arial',
     fill: '#ffffff'
   }
 }
