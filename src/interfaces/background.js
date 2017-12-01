@@ -36,6 +36,7 @@ export const createBackground = (state) => {
   graphics.endFill()
   state.transparent = true
   state.setGroup = state.game.add.group()
+  state.gameGroup = state.game.add.group()
   state.add.text(120, height - 40, 'Created by Tine Arconn', styles.big)
   state.add.text(60, height - 20, 'Ludum Dare 34 - Growing & Two Buttons Controls', styles.small)
 }
@@ -46,7 +47,6 @@ export const spawnTiles = (state) => {
     for (let yy = 0; yy < 332; yy += 38) {
       // Create a tile using the new game.add.isoSprite factory method at the specified position.
       // The last parameter is the group you want to add it to (just like game.add.sprite)
-      console.log(xx, yy)
       if (xx <= 38 || yy <= 38 || xx >= 266 || yy >= 266) {
         tile = state.isoPlugin.addIsoSprite(xx, yy, 0, 'grass', 0, state.setGroup)
         tile.anchor.set(0.5, 0.7)

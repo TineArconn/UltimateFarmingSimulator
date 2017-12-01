@@ -23,7 +23,6 @@ export default class extends Phaser.State {
     this.load.image('buttonN', './assets/images/keyboard/buttonN.png')
 
     // Markers
-    this.load.image('howitzer', './assets/images/tiles/howitzer.png')
     this.load.image('life', './assets/images/marker/seed.png')
     this.load.image('stone', './assets/images/marker/Stone3.png')
 
