@@ -20,15 +20,6 @@ export default class extends Phaser.State {
     createBackground(this)
     spawnTiles(this)
 
-    // Particles effect
-    this.emitter = this.add.emitter(this.width / 2, this.height - 150, 10)
-    this.emitter.makeParticles('stone')
-    this.emitter.minParticleSpeed.set(-50, -30)
-    this.emitter.maxParticleSpeed.set(50, 30)
-    this.emitter.setAlpha(1, 0.1, 1000, Phaser.Easing.Linear.None)
-    this.emitter.setScale(0.7, 0.1, 0.7, 0.1, 3000, Phaser.Easing.Quintic.Out)
-    this.emitter.gravity = 200
-
     // 2 Buttons
     this.nButton = this.input.keyboard.addKey(Phaser.Keyboard.N)
     this.gButton = this.input.keyboard.addKey(Phaser.Keyboard.G)
@@ -56,8 +47,8 @@ export default class extends Phaser.State {
     this.gameGroup.destroy()
     this.gameGroup = this.game.add.group()
     this.tilesLife = []
-    for (let xx = 76; xx < 268; xx += 38) {
-      for (let yy = 76; yy < 268; yy += 38) {
+    for (let xx = 76; xx < 230; xx += 38) {
+      for (let yy = 76; yy < 230; yy += 38) {
         this.addNewSeed(xx, yy)
       }
     }
@@ -67,10 +58,9 @@ export default class extends Phaser.State {
   addNewSeed (xx, yy) {
     // On récupère aléatoirement une graine selon la phase
     let seedToFind = Math.random()
+    let probabilities, life, seedToAdd, tile
 
     // Calcul de probabilité selon la phase
-    let probabilities
-
     if (this.phase < 1) {
       probabilities = [1, 0, 0, 0]
     } else if (this.phase < 5) {
@@ -96,9 +86,6 @@ export default class extends Phaser.State {
       }
     }
 
-    let life
-
-    let seedToAdd
     switch (i) {
       case 0:
         life = 1
@@ -118,7 +105,6 @@ export default class extends Phaser.State {
         break
     }
 
-    let tile
     tile = this.isoPlugin.addIsoSprite(xx, yy, 0, seedToAdd, 0, this.gameGroup)
     tile.anchor.set(0.5, 0.7)
     tile.scale.setTo(1.8, 1.8)
@@ -163,9 +149,26 @@ export default class extends Phaser.State {
     if (seedLife === 0) {
       this.losingLife()
     } else {
-      // this.emitter.start(true, 1000, null, 50)
+      let position = this.gameGroup.getAt(this.onTileNumber)._isoPosition
+
+      // Particles effect
+      let emitter = this.add.emitter(position.x, position.y, 10)
+      emitter.makeParticles('stone')
+      emitter.minParticleSpeed.set(-50, -30)
+      emitter.maxParticleSpeed.set(50, 30)
+      // emitter.anchor.set(0.5, 0.7)
+      emitter.setAlpha(1, 0.1, 1000, Phaser.Easing.Linear.None)
+      emitter.setScale(0.7, 0.1, 0.7, 0.1, 3000, Phaser.Easing.Quintic.Out)
+      emitter.gravity = 200
+      emitter.start(true, 1000, null, 50)
+
       this.tilesLife[this.onTileNumber]--
+
       this.gameGroup.getAt(this.onTileNumber).destroy()
+      let tile = this.isoPlugin.addIsoSprite(position.x, position.y, 0, 'tile' + seedLife, 0)
+      tile.anchor.set(0.5, 0.7)
+      tile.scale.setTo(1.8, 1.8)
+      this.gameGroup.addChildAt(tile, this.onTileNumber)
     }
   }
   next () {
